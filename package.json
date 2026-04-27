@@ -1,0 +1,59 @@
+{
+  "name": "quiz-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "validate-config": "npx expo config --json > /dev/null",
+    "doctor": "npx expo-doctor",
+    "check": "npm run typecheck && npm run validate-config",
+    "lint": "eslint .",
+    "format": "prettier --write \"app/**/*.{ts,tsx}\" \"src/**/*.ts\"",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx}\" \"src/**/*.ts\"",
+    "knip": "knip"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100,
+    "tabWidth": 2
+  },
+  "dependencies": {
+    "axios": "^1.15.2",
+    "expo": "~54.0.33",
+    "expo-constants": "~18.0.13",
+    "expo-linking": "~8.0.11",
+    "expo-localization": "^55.0.13",
+    "expo-router": "~6.0.23",
+    "expo-secure-store": "^55.0.13",
+    "expo-splash-screen": "~31.0.13",
+    "expo-sqlite": "~16.0.10",
+    "expo-status-bar": "~3.0.9",
+    "i18next": "^26.0.8",
+    "react": "19.1.0",
+    "react-i18next": "^17.0.4",
+    "react-native": "0.81.5",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "react-native-worklets": "0.5.1",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "~19.1.0",
+    "babel-preset-expo": "~54.0.10",
+    "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "knip": "^6.7.0",
+    "prettier": "^3.8.3",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.59.0"
+  }
+}

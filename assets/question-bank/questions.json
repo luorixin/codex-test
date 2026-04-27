@@ -1,0 +1,62 @@
+[
+  {
+    "id": "math-q1",
+    "subjectId": "math",
+    "topicId": "math-linear-equation",
+    "type": "single_choice",
+    "stem": "方程 2x + 3 = 11 的解是多少？",
+    "explanation": "先移项得到 2x = 8，再两边同时除以 2，得到 x = 4。",
+    "difficulty": "easy",
+    "source": "phase1-demo"
+  },
+  {
+    "id": "math-q2",
+    "subjectId": "math",
+    "topicId": "math-linear-equation",
+    "type": "true_false",
+    "stem": "方程 x - 7 = 0 的解是 x = 7。",
+    "explanation": "将 7 移到等号右侧得到 x = 7，因此命题正确。",
+    "difficulty": "easy",
+    "source": "phase1-demo"
+  },
+  {
+    "id": "math-q3",
+    "subjectId": "math",
+    "topicId": "math-triangle",
+    "type": "single_choice",
+    "stem": "三角形三个内角和等于多少度？",
+    "explanation": "任意三角形的内角和恒等于 180 度。",
+    "difficulty": "easy",
+    "source": "phase1-demo"
+  },
+  {
+    "id": "math-q4",
+    "subjectId": "math",
+    "topicId": "math-triangle",
+    "type": "multiple_choice",
+    "stem": "下面哪些说法正确？",
+    "explanation": "等边三角形一定是锐角三角形；直角三角形一定有一个角是 90 度。",
+    "difficulty": "medium",
+    "source": "phase1-demo"
+  },
+  {
+    "id": "english-q1",
+    "subjectId": "english",
+    "topicId": "english-tense",
+    "type": "single_choice",
+    "stem": "She ____ to school every day.",
+    "explanation": "主语是第三人称单数，动词用 goes。",
+    "difficulty": "easy",
+    "source": "phase1-demo"
+  },
+  {
+    "id": "english-q2",
+    "subjectId": "english",
+    "topicId": "english-tense",
+    "type": "true_false",
+    "stem": "一般现在时可以表示经常发生的动作。",
+    "explanation": "一般现在时常用于习惯、经常发生的动作或客观事实，因此命题正确。",
+    "difficulty": "easy",
+    "source": "phase1-demo"
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "math-q1-a",
+    "questionId": "math-q1",
+    "key": "A",
+    "content": "3",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q1-b",
+    "questionId": "math-q1",
+    "key": "B",
+    "content": "4",
+    "isCorrect": true
+  },
+  {
+    "id": "math-q1-c",
+    "questionId": "math-q1",
+    "key": "C",
+    "content": "5",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q1-d",
+    "questionId": "math-q1",
+    "key": "D",
+    "content": "6",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q2-a",
+    "questionId": "math-q2",
+    "key": "A",
+    "content": "正确",
+    "isCorrect": true
+  },
+  {
+    "id": "math-q2-b",
+    "questionId": "math-q2",
+    "key": "B",
+    "content": "错误",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q3-a",
+    "questionId": "math-q3",
+    "key": "A",
+    "content": "90",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q3-b",
+    "questionId": "math-q3",
+    "key": "B",
+    "content": "180",
+    "isCorrect": true
+  },
+  {
+    "id": "math-q3-c",
+    "questionId": "math-q3",
+    "key": "C",
+    "content": "270",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q3-d",
+    "questionId": "math-q3",
+    "key": "D",
+    "content": "360",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q4-a",
+    "questionId": "math-q4",
+    "key": "A",
+    "content": "等边三角形一定是锐角三角形",
+    "isCorrect": true
+  },
+  {
+    "id": "math-q4-b",
+    "questionId": "math-q4",
+    "key": "B",
+    "content": "直角三角形一定有一个角是 90 度",
+    "isCorrect": true
+  },
+  {
+    "id": "math-q4-c",
+    "questionId": "math-q4",
+    "key": "C",
+    "content": "任意三角形三个外角和等于 90 度",
+    "isCorrect": false
+  },
+  {
+    "id": "math-q4-d",
+    "questionId": "math-q4",
+    "key": "D",
+    "content": "钝角三角形一定有两个钝角",
+    "isCorrect": false
+  },
+  {
+    "id": "english-q1-a",
+    "questionId": "english-q1",
+    "key": "A",
+    "content": "go",
+    "isCorrect": false
+  },
+  {
+    "id": "english-q1-b",
+    "questionId": "english-q1",
+    "key": "B",
+    "content": "goes",
+    "isCorrect": true
+  },
+  {
+    "id": "english-q1-c",
+    "questionId": "english-q1",
+    "key": "C",
+    "content": "going",
+    "isCorrect": false
+  },
+  {
+    "id": "english-q1-d",
+    "questionId": "english-q1",
+    "key": "D",
+    "content": "gone",
+    "isCorrect": false
+  },
+  {
+    "id": "english-q2-a",
+    "questionId": "english-q2",
+    "key": "A",
+    "content": "正确",
+    "isCorrect": true
+  },
+  {
+    "id": "english-q2-b",
+    "questionId": "english-q2",
+    "key": "B",
+    "content": "错误",
+    "isCorrect": false
+  }
+]

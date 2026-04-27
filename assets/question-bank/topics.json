@@ -1,0 +1,44 @@
+[
+  {
+    "id": "math-algebra",
+    "subjectId": "math",
+    "parentId": null,
+    "name": "代数基础",
+    "sortOrder": 1
+  },
+  {
+    "id": "math-linear-equation",
+    "subjectId": "math",
+    "parentId": "math-algebra",
+    "name": "一元一次方程",
+    "sortOrder": 1
+  },
+  {
+    "id": "math-geometry",
+    "subjectId": "math",
+    "parentId": null,
+    "name": "平面几何",
+    "sortOrder": 2
+  },
+  {
+    "id": "math-triangle",
+    "subjectId": "math",
+    "parentId": "math-geometry",
+    "name": "三角形",
+    "sortOrder": 1
+  },
+  {
+    "id": "english-grammar",
+    "subjectId": "english",
+    "parentId": null,
+    "name": "语法基础",
+    "sortOrder": 1
+  },
+  {
+    "id": "english-tense",
+    "subjectId": "english",
+    "parentId": "english-grammar",
+    "name": "一般现在时",
+    "sortOrder": 1
+  }
+]
