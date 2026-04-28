@@ -102,6 +102,16 @@ export type HomeOverview = {
   activeDaysLast7: number;
 };
 
+export type HomeResourceFileType = 'pdf' | 'docx' | 'image';
+
+export type HomeResourceItem = {
+  id: string;
+  title: string;
+  fileType: HomeResourceFileType;
+  previewUrl: string;
+  downloadUrl: string;
+};
+
 export type PracticeMode = 'topic_practice' | 'wrong_book';
 
 export type PracticeQuestionOption = {
@@ -256,6 +266,7 @@ export type HomeScreenData = {
   overview: HomeOverview;
   subjects: SubjectSummary[];
   recentSession: PracticeSessionSummary | null;
+  resources: HomeResourceItem[];
 };
 
 export type SubjectScreenData = {

@@ -186,6 +186,38 @@ const zhCN = {
     logoutButton: '退出登录',
     subjectsTitle: '学科列表',
     subjectsSubtitle: '点击进入学科下的章节和知识点。',
+    resources: {
+      title: '资料下载',
+      subtitle: '支持预览 PDF、DOCX 和图片资料，并在应用内下载到本地。',
+      preview: '预览',
+      previewing: '预览中...',
+      download: '下载',
+      downloadRequiresLogin: '资料预览对所有用户开放，下载操作需要先登录。',
+      previewFailed: '无法打开资料预览，请稍后重试。',
+      downloadFailed: '无法打开下载链接，请稍后重试。',
+      errorNetwork: '网络连接异常，请检查网络后重试。',
+      errorStorage: '设备存储空间不足，请清理后重试。',
+      errorNotFound: '资源文件不存在，可能已被移除。',
+      openDownloaded: '打开文件',
+      openDownloadedFailed: '无法打开已下载文件，请稍后重试。',
+      cancelDownload: '取消',
+      downloadCancelled: '下载已取消。',
+      downloadingLabel: '下载中 {{progress}}%',
+      downloadingDescription: '当前下载进度：{{progress}}%',
+      downloadingIndeterminate: '正在下载，请耐心等待...',
+      downloadCompleted: '已下载到应用本地，可直接打开查看。',
+      empty: '当前还没有可下载资料。',
+      types: {
+        pdf: 'PDF',
+        docx: 'DOCX',
+        image: '图片',
+      },
+      items: {
+        pdfGuide: '刷题方法指南',
+        docxTemplate: '学习计划模板',
+        imageNotes: '重点笔记图示',
+      },
+    },
   },
   recent: {
     title: '最近学习',
@@ -204,14 +236,10 @@ const zhCN = {
     entrySubtitle: '查看当前应用的数据使用与本地存储说明。',
     openLink: '查看隐私协议',
     subtitle: '当前版本仅作为 MVP 说明文档，后续可替换为正式协议内容。',
-    bodyIntro:
-      '本应用会记录你的练题结果、错题本和学习统计，用于在本机上恢复学习进度。',
-    bodyUsage:
-      '当前版本使用本地缓存、登录凭证和语言设置来支持题库浏览、登录状态保持与界面切换。',
-    bodyStorage:
-      '登录凭证会保存在设备安全存储中，练题记录和缓存数据会保存在本地数据库中。',
-    bodyContact:
-      '如果后续接入正式后端或云端同步，我们会在这里补充数据上传、同步与删除规则。',
+    bodyIntro: '本应用会记录你的练题结果、错题本和学习统计，用于在本机上恢复学习进度。',
+    bodyUsage: '当前版本使用本地缓存、登录凭证和语言设置来支持题库浏览、登录状态保持与界面切换。',
+    bodyStorage: '登录凭证会保存在设备安全存储中，练题记录和缓存数据会保存在本地数据库中。',
+    bodyContact: '如果后续接入正式后端或云端同步，我们会在这里补充数据上传、同步与删除规则。',
   },
   stats: {
     title: '学习统计',

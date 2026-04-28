@@ -193,10 +193,45 @@ const en = {
     logoutButton: 'Sign out',
     subjectsTitle: 'Subject list',
     subjectsSubtitle: 'Open a subject to browse its chapters and topics.',
+    resources: {
+      title: 'Downloads',
+      subtitle:
+        'Preview PDF, DOCX, and image resources here, then download them into local app storage.',
+      preview: 'Preview',
+      previewing: 'Previewing...',
+      download: 'Download',
+      downloadRequiresLogin:
+        'Resource previews are public, but downloads require you to sign in first.',
+      previewFailed: 'Unable to open the preview right now. Please try again later.',
+      downloadFailed: 'Unable to open the download link right now. Please try again later.',
+      errorNetwork: 'Network error. Please check your connection and try again.',
+      errorStorage: 'Not enough storage space. Please free up space and try again.',
+      errorNotFound: 'Resource file not found. It may have been removed.',
+      openDownloaded: 'Open file',
+      openDownloadedFailed: 'Unable to open the downloaded file right now. Please try again later.',
+      cancelDownload: 'Cancel',
+      downloadCancelled: 'Download cancelled.',
+      downloadingLabel: 'Downloading {{progress}}%',
+      downloadingDescription: 'Current download progress: {{progress}}%',
+      downloadingIndeterminate: 'Downloading, please wait...',
+      downloadCompleted: 'Saved to local app storage and ready to open.',
+      empty: 'No downloadable resources are available yet.',
+      types: {
+        pdf: 'PDF',
+        docx: 'DOCX',
+        image: 'Image',
+      },
+      items: {
+        pdfGuide: 'Practice guide',
+        docxTemplate: 'Study plan template',
+        imageNotes: 'Key notes image',
+      },
+    },
   },
   recent: {
     title: 'Recent study',
-    subtitle: 'Review your latest practice round and jump back into the wrong-answer and stats flows.',
+    subtitle:
+      'Review your latest practice round and jump back into the wrong-answer and stats flows.',
     toolsTitle: 'Study tools',
     toolsSubtitle: 'Open wrong answers and study stats from here.',
   },
@@ -211,8 +246,7 @@ const en = {
     title: 'Privacy policy',
     entrySubtitle: 'Review how this app currently uses local data and storage.',
     openLink: 'View privacy policy',
-    subtitle:
-      'This is an MVP-level policy page and can be replaced with the formal policy later.',
+    subtitle: 'This is an MVP-level policy page and can be replaced with the formal policy later.',
     bodyIntro:
       'This app stores your practice results, wrong answers, and study statistics to restore progress on the same device.',
     bodyUsage:
