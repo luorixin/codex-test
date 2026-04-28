@@ -7,6 +7,7 @@ import { useAuthStore } from '@/src/stores/authStore';
 import {
   checkResourceFileExists,
   createResourceDownload,
+  exportDownloadedResource,
   openDownloadedResource,
   openResourcePreview,
   ResourceDownloadError,
@@ -18,12 +19,14 @@ type ResourceDownloadUiState = {
   progress: number;
   localUri?: string;
   errorMessage?: string;
+  exported?: boolean;
 };
 
 export function useResourceDownload(resources: HomeResourceItem[]) {
   const { t } = useTranslation();
   const [resourceStates, setResourceStates] = useState<Record<string, ResourceDownloadUiState>>({});
   const [previewingResources, setPreviewingResources] = useState<Set<string>>(new Set());
+  const [exportingResources, setExportingResources] = useState<Set<string>>(new Set());
   const cancelRef = useRef<Map<string, () => Promise<void>>>(new Map());
   const animRef = useRef<Map<string, Animated.Value>>(new Map());
   const queueRef = useRef<Array<() => Promise<void>>>([]);
@@ -39,6 +42,7 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
               status: 'completed',
               progress: 100,
               localUri,
+              exported: false,
             },
           }));
         }
@@ -143,14 +147,15 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
       } catch {
         setResourceStates((prev) => ({
           ...prev,
-          [resource.id]: {
-            ...prev[resource.id],
-            status: prev[resource.id]?.status === 'completed' ? 'completed' : 'failed',
-            progress: prev[resource.id]?.progress ?? 0,
-            localUri: prev[resource.id]?.localUri,
-            errorMessage: t('home.resources.previewFailed'),
-          },
-        }));
+            [resource.id]: {
+              ...prev[resource.id],
+              status: prev[resource.id]?.status === 'completed' ? 'completed' : 'failed',
+              progress: prev[resource.id]?.progress ?? 0,
+              localUri: prev[resource.id]?.localUri,
+              exported: prev[resource.id]?.exported,
+              errorMessage: t('home.resources.previewFailed'),
+            },
+          }));
       } finally {
         setPreviewingResources((prev) => {
           const next = new Set(prev);
@@ -224,8 +229,11 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
               status: 'completed',
               progress: 100,
               localUri: result.localUri,
+              exported: false,
             },
           }));
+
+          await handleExportToSystem(resource.id, resource.fileType, result.localUri);
         } catch (error) {
           stopAnim(resource.id);
           const reason = error instanceof ResourceDownloadError ? error.reason : 'unknown';
@@ -235,6 +243,7 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
             [resource.id]: {
               status: 'failed',
               progress: 0,
+              exported: false,
               errorMessage: getErrorMessage(reason),
             },
           }));
@@ -265,6 +274,17 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
       }
     },
     [t],
+  );
+
+  const handleExportDownloaded = useCallback(
+    async (
+      resourceId: string,
+      fileType: HomeResourceItem['fileType'],
+      localUri: string,
+    ) => {
+      await handleExportToSystem(resourceId, fileType, localUri);
+    },
+    [],
   );
 
   const renderProgressBar = useCallback(
@@ -313,9 +333,44 @@ export function useResourceDownload(resources: HomeResourceItem[]) {
     handleDownload,
     handleCancel,
     handleOpenDownloaded,
+    handleExportDownloaded,
     renderProgressBar,
+    exportingResources,
     isDownloading: Object.values(resourceStates).some((s) => s.status === 'downloading'),
   } as const;
+
+  async function handleExportToSystem(
+    resourceId: string,
+    fileType: HomeResourceItem['fileType'],
+    localUri: string,
+  ) {
+    try {
+      setExportingResources((prev) => new Set(prev).add(resourceId));
+      await exportDownloadedResource(localUri, fileType);
+      setResourceStates((prev) => ({
+        ...prev,
+        [resourceId]: {
+          ...prev[resourceId],
+          exported: true,
+          errorMessage: undefined,
+        },
+      }));
+    } catch {
+      setResourceStates((prev) => ({
+        ...prev,
+        [resourceId]: {
+          ...prev[resourceId],
+          errorMessage: t('home.resources.exportFailed'),
+        },
+      }));
+    } finally {
+      setExportingResources((prev) => {
+        const next = new Set(prev);
+        next.delete(resourceId);
+        return next;
+      });
+    }
+  }
 }
 
 const styles = StyleSheet.create({

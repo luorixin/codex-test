@@ -18,10 +18,12 @@ export default function HomeTabScreen() {
   const {
     resourceStates,
     previewingResources,
+    exportingResources,
     handlePreview,
     handleDownload,
     handleCancel,
     handleOpenDownloaded,
+    handleExportDownloaded,
     renderProgressBar,
   } = useResourceDownload(screenData?.resources ?? []);
 
@@ -111,15 +113,37 @@ export default function HomeTabScreen() {
                       </Pressable>
                     ) : null}
                     {state.status === 'completed' && state.localUri ? (
-                      <Pressable onPress={() => handleOpenDownloaded(resource.id, state.localUri!)}>
+                      <Pressable
+                        onPress={() =>
+                          handleExportDownloaded(
+                            resource.id,
+                            resource.fileType,
+                            state.localUri!,
+                          )
+                        }
+                        disabled={exportingResources.has(resource.id)}
+                      >
                         <Text style={styles.previewLink}>{t('home.resources.openDownloaded')}</Text>
+                      </Pressable>
+                    ) : null}
+                    {state.status === 'completed' && state.localUri ? (
+                      <Pressable
+                        onPress={() => handleOpenDownloaded(resource.id, state.localUri!)}
+                      >
+                        <Text style={styles.previewLink}>
+                          {t('home.resources.openDownloadedFile')}
+                        </Text>
                       </Pressable>
                     ) : null}
                   </View>
                   {state.status === 'downloading' ? renderProgressBar(resource.id, state) : null}
                   {state.status === 'completed' ? (
                     <Text style={styles.resourceSuccessText}>
-                      {t('home.resources.downloadCompleted')}
+                      {state.exported
+                        ? t('home.resources.exportCompleted')
+                        : exportingResources.has(resource.id)
+                          ? t('home.resources.exporting')
+                          : t('home.resources.downloadCompleted')}
                     </Text>
                   ) : null}
                   {state.status === 'cancelled' ? (

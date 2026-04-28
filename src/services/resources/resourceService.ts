@@ -1,5 +1,6 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Linking from 'expo-linking';
+import * as Sharing from 'expo-sharing';
 import * as WebBrowser from 'expo-web-browser';
 
 import { Platform } from 'react-native';
@@ -208,6 +209,23 @@ export async function openDownloadedResource(localUri: string) {
   await Linking.openURL(uri);
 }
 
+export async function exportDownloadedResource(
+  localUri: string,
+  fileType: HomeResourceItem['fileType'],
+) {
+  const isAvailable = await Sharing.isAvailableAsync();
+
+  if (!isAvailable) {
+    throw new Error('home.resources.exportUnavailable');
+  }
+
+  await Sharing.shareAsync(localUri, {
+    dialogTitle: t('home.resources.exportDialogTitle'),
+    mimeType: getResourceMimeType(fileType),
+    UTI: getResourceUti(fileType),
+  });
+}
+
 export async function checkResourceFileExists(resource: HomeResourceItem): Promise<{
   exists: boolean;
   localUri: string;
@@ -253,5 +271,31 @@ function getResourceExtension(fileType: HomeResourceItem['fileType']) {
       return 'jpg';
     default:
       return 'bin';
+  }
+}
+
+function getResourceMimeType(fileType: HomeResourceItem['fileType']) {
+  switch (fileType) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case 'image':
+      return 'image/jpeg';
+    default:
+      return 'application/octet-stream';
+  }
+}
+
+function getResourceUti(fileType: HomeResourceItem['fileType']) {
+  switch (fileType) {
+    case 'pdf':
+      return 'com.adobe.pdf';
+    case 'docx':
+      return 'org.openxmlformats.wordprocessingml.document';
+    case 'image':
+      return 'public.jpeg';
+    default:
+      return 'public.data';
   }
 }
