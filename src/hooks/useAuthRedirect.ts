@@ -3,13 +3,19 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from '@/src/stores/authStore';
 
+const PUBLIC_PATHS = ['/', '/me', '/privacy', '/login'] as const;
+
+function isPublicPath(pathname: string) {
+  return PUBLIC_PATHS.includes(pathname as (typeof PUBLIC_PATHS)[number]);
+}
+
 export function useAuthRedirect(): 'login_required' | 'reentry' | null {
   const router = useRouter();
   const pathname = usePathname();
   const authStatus = useAuthStore((state) => state.status);
 
   useEffect(() => {
-    if (authStatus === 'unauthenticated' && pathname !== '/login') {
+    if (authStatus === 'unauthenticated' && !isPublicPath(pathname)) {
       router.replace('/login');
       return;
     }
@@ -19,7 +25,7 @@ export function useAuthRedirect(): 'login_required' | 'reentry' | null {
     }
   }, [authStatus, pathname, router]);
 
-  if (authStatus === 'unauthenticated' && pathname !== '/login') {
+  if (authStatus === 'unauthenticated' && !isPublicPath(pathname)) {
     return 'login_required';
   }
 

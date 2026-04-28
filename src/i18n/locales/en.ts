@@ -30,6 +30,9 @@ const en = {
   navigation: {
     login: 'Sign in',
     home: 'Quiz App',
+    recent: 'Recent study',
+    me: 'Me',
+    privacy: 'Privacy policy',
     subjects: 'Subjects',
     topicDetail: 'Topic details',
     practiceIntro: 'Practice setup',
@@ -39,6 +42,11 @@ const en = {
     wrongBook: 'Wrong answers',
     wrongBookDetail: 'Wrong answer detail',
     notFound: 'Page not found',
+    tabs: {
+      home: 'Home',
+      recent: 'Recent',
+      me: 'Me',
+    },
   },
   state: {
     redirectingToLoginTitle: 'Redirecting to sign in',
@@ -181,13 +189,38 @@ const en = {
     shortcutsTitle: 'Quick access',
     wrongBookLink: 'Wrong answers',
     statsLink: 'Study stats',
-    accountTitle: 'Account',
-    accountSubtitle: 'Signed in as {{email}}',
-    accountUnavailable: 'Sign-in state is currently unavailable.',
     loggingOutButton: 'Signing out...',
     logoutButton: 'Sign out',
     subjectsTitle: 'Subject list',
     subjectsSubtitle: 'Open a subject to browse its chapters and topics.',
+  },
+  recent: {
+    title: 'Recent study',
+    subtitle: 'Review your latest practice round and jump back into the wrong-answer and stats flows.',
+    toolsTitle: 'Study tools',
+    toolsSubtitle: 'Open wrong answers and study stats from here.',
+  },
+  me: {
+    accountTitle: 'Account',
+    accountSubtitle: 'Signed in as {{email}}',
+    accountUnauthenticated:
+      'You are not signed in. You can still review the privacy policy and change the language.',
+    loginButton: 'Go to sign in',
+  },
+  privacy: {
+    title: 'Privacy policy',
+    entrySubtitle: 'Review how this app currently uses local data and storage.',
+    openLink: 'View privacy policy',
+    subtitle:
+      'This is an MVP-level policy page and can be replaced with the formal policy later.',
+    bodyIntro:
+      'This app stores your practice results, wrong answers, and study statistics to restore progress on the same device.',
+    bodyUsage:
+      'The current version uses local cache, sign-in credentials, and language preferences to support browsing, auth persistence, and UI localization.',
+    bodyStorage:
+      'Sign-in credentials are kept in secure device storage, while practice records and cache data are stored in the local database.',
+    bodyContact:
+      'When a formal backend or cloud sync is introduced, this page will be updated with upload, sync, and deletion rules.',
   },
   stats: {
     title: 'Study stats',

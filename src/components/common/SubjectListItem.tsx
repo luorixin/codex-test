@@ -5,11 +5,22 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { formatNumber } from '@/src/i18n';
 import type { SubjectSummary } from '@/src/types/domain';
 
-export function SubjectListItem({ subject }: { subject: SubjectSummary }) {
+type SubjectListItemProps = {
+  subject: SubjectSummary;
+  backTitle?: string;
+};
+
+export function SubjectListItem({ subject, backTitle }: SubjectListItemProps) {
   const { t } = useTranslation();
+  const href = backTitle
+    ? {
+        pathname: '/subjects/[subjectId]' as const,
+        params: { subjectId: subject.id, backTitle },
+      }
+    : `/subjects/${subject.id}`;
 
   return (
-    <Link href={`/subjects/${subject.id}`} asChild>
+    <Link href={href} asChild>
       <Pressable style={styles.container}>
         <View style={styles.copy}>
           <Text style={styles.title}>{subject.name}</Text>

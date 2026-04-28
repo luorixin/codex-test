@@ -15,6 +15,12 @@ export { ErrorBoundary } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
+function getBackTitle(route: { params?: object }) {
+  const params = route.params;
+  const backTitle = params && 'backTitle' in params ? params.backTitle : undefined;
+  return typeof backTitle === 'string' ? backTitle : undefined;
+}
+
 export default function RootLayout() {
   const status = useAppStore((state) => state.status);
   const errorMessage = useAppStore((state) => state.errorMessage);
@@ -88,27 +94,58 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: '#f3f4f6' },
           }}
         >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="login"
             options={{ title: t('navigation.login'), headerShown: false }}
           />
-          <Stack.Screen name="index" options={{ title: t('navigation.home') }} />
-          <Stack.Screen name="subjects/[subjectId]" options={{ title: t('navigation.subjects') }} />
+          <Stack.Screen
+            name="subjects/[subjectId]"
+            options={({ route }) => ({
+              title: t('navigation.subjects'),
+              headerBackTitle: getBackTitle(route),
+            })}
+          />
           <Stack.Screen name="topics/[topicId]" options={{ title: t('navigation.topicDetail') }} />
           <Stack.Screen name="practice/intro" options={{ title: t('navigation.practiceIntro') }} />
           <Stack.Screen
             name="practice/session/[sessionId]"
-            options={{ title: t('navigation.practiceSession') }}
+            options={({ route }) => ({
+              title: t('navigation.practiceSession'),
+              headerBackTitle: getBackTitle(route),
+            })}
           />
           <Stack.Screen
             name="practice/result/[sessionId]"
-            options={{ title: t('navigation.practiceResult') }}
+            options={({ route }) => ({
+              title: t('navigation.practiceResult'),
+              headerBackTitle: getBackTitle(route),
+            })}
           />
-          <Stack.Screen name="stats/index" options={{ title: t('navigation.stats') }} />
-          <Stack.Screen name="wrong-book/index" options={{ title: t('navigation.wrongBook') }} />
+          <Stack.Screen
+            name="stats/index"
+            options={({ route }) => ({
+              title: t('navigation.stats'),
+              headerBackTitle: getBackTitle(route),
+            })}
+          />
+          <Stack.Screen
+            name="wrong-book/index"
+            options={({ route }) => ({
+              title: t('navigation.wrongBook'),
+              headerBackTitle: getBackTitle(route),
+            })}
+          />
           <Stack.Screen
             name="wrong-book/[questionId]"
             options={{ title: t('navigation.wrongBookDetail') }}
+          />
+          <Stack.Screen
+            name="privacy"
+            options={({ route }) => ({
+              title: t('navigation.privacy'),
+              headerBackTitle: getBackTitle(route),
+            })}
           />
         </Stack>
       </SafeAreaProvider>

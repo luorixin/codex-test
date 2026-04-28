@@ -29,6 +29,9 @@ const zhCN = {
   navigation: {
     login: '登录',
     home: '刷题 App',
+    recent: '最近学习',
+    me: '我的',
+    privacy: '隐私协议',
     subjects: '学科内容',
     topicDetail: '知识点详情',
     practiceIntro: '练题准备',
@@ -38,6 +41,11 @@ const zhCN = {
     wrongBook: '错题本',
     wrongBookDetail: '错题详情',
     notFound: '页面不存在',
+    tabs: {
+      home: '首页',
+      recent: '最近学习',
+      me: '我的',
+    },
   },
   state: {
     redirectingToLoginTitle: '正在跳转登录页',
@@ -174,13 +182,36 @@ const zhCN = {
     shortcutsTitle: '快捷入口',
     wrongBookLink: '进入错题本',
     statsLink: '学习统计',
-    accountTitle: '账号',
-    accountSubtitle: '当前登录账号：{{email}}',
-    accountUnavailable: '当前登录状态不可用。',
     loggingOutButton: '正在退出...',
     logoutButton: '退出登录',
     subjectsTitle: '学科列表',
     subjectsSubtitle: '点击进入学科下的章节和知识点。',
+  },
+  recent: {
+    title: '最近学习',
+    subtitle: '查看最近一次练题记录，并快速进入错题本和学习统计。',
+    toolsTitle: '学习工具',
+    toolsSubtitle: '从这里进入错题本和统计页继续复盘。',
+  },
+  me: {
+    accountTitle: '账号',
+    accountSubtitle: '当前登录账号：{{email}}',
+    accountUnauthenticated: '当前未登录，你仍然可以查看隐私协议和切换语言。',
+    loginButton: '去登录',
+  },
+  privacy: {
+    title: '隐私协议',
+    entrySubtitle: '查看当前应用的数据使用与本地存储说明。',
+    openLink: '查看隐私协议',
+    subtitle: '当前版本仅作为 MVP 说明文档，后续可替换为正式协议内容。',
+    bodyIntro:
+      '本应用会记录你的练题结果、错题本和学习统计，用于在本机上恢复学习进度。',
+    bodyUsage:
+      '当前版本使用本地缓存、登录凭证和语言设置来支持题库浏览、登录状态保持与界面切换。',
+    bodyStorage:
+      '登录凭证会保存在设备安全存储中，练题记录和缓存数据会保存在本地数据库中。',
+    bodyContact:
+      '如果后续接入正式后端或云端同步，我们会在这里补充数据上传、同步与删除规则。',
   },
   stats: {
     title: '学习统计',
