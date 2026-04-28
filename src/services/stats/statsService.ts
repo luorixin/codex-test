@@ -1,5 +1,6 @@
 import { ttlCache } from '@/src/cache/ttlCache';
 import {
+  getDailyPracticeStats,
   getHomeOverview,
   getRecentPracticeSessions,
   getRecentSevenDayStats,
@@ -9,6 +10,7 @@ import {
 import type { HomeOverview, StatsSummary } from '@/src/types/domain';
 
 export { getHomeOverview };
+export { getDailyPracticeStats };
 
 const STATS_CACHE_TTL = 30_000;
 

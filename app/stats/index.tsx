@@ -1,24 +1,71 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { formatDate, formatNumber, formatPercent } from '@/src/i18n';
+import { CalendarView } from '@/src/components/common/CalendarView';
 import { SectionCard } from '@/src/components/common/SectionCard';
 import { useScreenData } from '@/src/hooks/useScreenData';
 import {
   getCoverageRate,
+  getDailyPracticeStats,
   getOverviewAccuracyRate,
   getStatsSummary,
 } from '@/src/services/stats/statsService';
+import type { CalendarEventMap, CalendarViewProps } from '@/src/components/common/CalendarView';
 import type { DailyPracticeStat, PracticeSessionSummary } from '@/src/types/domain';
 
 export default function StatsScreen() {
   const { t } = useTranslation();
   const loadSummary = useCallback(() => getStatsSummary(), []);
   const { data: summary, isLoading } = useScreenData(loadSummary);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
+  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
+  const [calendarDays, setCalendarDays] = useState<DailyPracticeStat[]>([]);
+  const loadedCalendarRanges = useRef(new Set<string>());
+  const calendarEventMap = useMemo(
+    () => buildLearningCalendarEventMap(calendarDays),
+    [calendarDays],
+  );
+  const defaultCalendarDate =
+    summary?.recentSevenDays[summary.recentSevenDays.length - 1]?.dateKey ?? undefined;
+  const calendarSelectedDate = selectedCalendarDate ?? defaultCalendarDate;
+  const selectedDailyStat = calendarDays.find((day) => day.dateKey === calendarSelectedDate);
+
+  useEffect(() => {
+    if (summary) {
+      setCalendarDays((currentDays) =>
+        mergeDailyPracticeStats(currentDays, summary.recentSevenDays),
+      );
+    }
+  }, [summary]);
+
+  const handleCalendarVisibleRangeChange = useCallback<
+    NonNullable<CalendarViewProps['onVisibleRangeChange']>
+  >((range) => {
+    const rangeKey = `${range.startDate}:${range.endDate}`;
+
+    if (loadedCalendarRanges.current.has(rangeKey)) {
+      return;
+    }
+
+    loadedCalendarRanges.current.add(rangeKey);
+
+    getDailyPracticeStats(range.startDate, range.endDate)
+      .then((days) => {
+        setCalendarDays((currentDays) => mergeDailyPracticeStats(currentDays, days));
+      })
+      .catch(() => {
+        loadedCalendarRanges.current.delete(rangeKey);
+      });
+  }, []);
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      scrollEnabled={isScrollEnabled}
+    >
       <SectionCard title={t('stats.title')} subtitle={t('stats.subtitle')}>
         {!isLoading && summary ? (
           <View style={styles.metricGrid}>
@@ -46,6 +93,21 @@ export default function StatsScreen() {
 
       {!isLoading && summary ? (
         <>
+          <SectionCard title={t('stats.calendarTitle')} subtitle={t('stats.calendarSubtitle')}>
+            <View style={styles.stack}>
+              <CalendarView
+                selectedDate={calendarSelectedDate}
+                eventMap={calendarEventMap}
+                onDatePress={setSelectedCalendarDate}
+                onSelectedDateChange={setSelectedCalendarDate}
+                onVisibleRangeChange={handleCalendarVisibleRangeChange}
+                onGestureStart={() => setIsScrollEnabled(false)}
+                onGestureEnd={() => setIsScrollEnabled(true)}
+              />
+              <CalendarDaySummary dateKey={calendarSelectedDate} day={selectedDailyStat} />
+            </View>
+          </SectionCard>
+
           <SectionCard
             title={t('stats.recentSevenDaysTitle')}
             subtitle={t('stats.recentSevenDaysSubtitle')}
@@ -123,6 +185,46 @@ export default function StatsScreen() {
   );
 }
 
+function CalendarDaySummary({
+  dateKey,
+  day,
+}: {
+  dateKey: string | undefined;
+  day: DailyPracticeStat | undefined;
+}) {
+  const { t } = useTranslation();
+
+  if (!dateKey) {
+    return <Text style={styles.text}>{t('stats.calendarSelectedEmpty')}</Text>;
+  }
+
+  const accuracyRate =
+    day && day.answerCount > 0 ? Math.round((day.correctCount / day.answerCount) * 100) : 0;
+
+  return (
+    <View style={styles.calendarSummaryCard}>
+      <Text style={styles.rowTitle}>
+        {formatDate(`${dateKey}T00:00:00Z`, { month: '2-digit', day: '2-digit' })}
+      </Text>
+      {day && day.answerCount > 0 ? (
+        <>
+          <Text style={styles.rowSubtitle}>
+            {t('stats.calendarSelectedSummary', {
+              answerCount: formatNumber(day.answerCount),
+              correctCount: formatNumber(day.correctCount),
+            })}
+          </Text>
+          <Text style={styles.calendarSummaryValue}>
+            {t('stats.calendarAccuracy', { value: formatPercent(accuracyRate) })}
+          </Text>
+        </>
+      ) : (
+        <Text style={styles.rowSubtitle}>{t('stats.calendarSelectedEmpty')}</Text>
+      )}
+    </View>
+  );
+}
+
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.metricCard}>
@@ -130,6 +232,51 @@ function MetricCard({ label, value }: { label: string; value: string }) {
       <Text style={styles.metricLabel}>{label}</Text>
     </View>
   );
+}
+
+function buildLearningCalendarEventMap(days: DailyPracticeStat[]): CalendarEventMap {
+  return days.reduce<CalendarEventMap>((eventMap, day) => {
+    if (day.answerCount === 0) {
+      return eventMap;
+    }
+
+    const accuracyRate = Math.round((day.correctCount / day.answerCount) * 100);
+
+    eventMap[day.dateKey] = [
+      {
+        id: `practice-${day.dateKey}`,
+        status: getPracticeStatus(accuracyRate),
+        count: day.answerCount,
+      },
+    ];
+
+    return eventMap;
+  }, {});
+}
+
+function mergeDailyPracticeStats(
+  currentDays: DailyPracticeStat[],
+  incomingDays: DailyPracticeStat[],
+) {
+  const dayMap = new Map(currentDays.map((day) => [day.dateKey, day]));
+
+  incomingDays.forEach((day) => {
+    dayMap.set(day.dateKey, day);
+  });
+
+  return [...dayMap.values()].sort((left, right) => left.dateKey.localeCompare(right.dateKey));
+}
+
+function getPracticeStatus(accuracyRate: number) {
+  if (accuracyRate >= 80) {
+    return 'success';
+  }
+
+  if (accuracyRate >= 50) {
+    return 'warning';
+  }
+
+  return 'danger';
 }
 
 function DailyRow({ day }: { day: DailyPracticeStat }) {
@@ -272,6 +419,17 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   rowValue: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#2563eb',
+  },
+  calendarSummaryCard: {
+    borderRadius: 14,
+    backgroundColor: '#f8fafc',
+    padding: 14,
+  },
+  calendarSummaryValue: {
+    marginTop: 8,
     fontSize: 14,
     fontWeight: '700',
     color: '#2563eb',

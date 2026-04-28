@@ -35,8 +35,20 @@ export async function getHomeOverview(): Promise<HomeOverview> {
 }
 
 export async function getRecentSevenDayStats(): Promise<DailyPracticeStat[]> {
+  return getDailyPracticeStats(getDateKeyOffset(-6), getDateKeyOffset(0));
+}
+
+export async function getDailyPracticeStats(
+  startDateKey: string,
+  endDateKey: string,
+): Promise<DailyPracticeStat[]> {
   const db = await getDatabase();
-  const startDateKey = getDateKeyOffset(-6);
+  const dateKeys = getDateKeyRange(startDateKey, endDateKey);
+
+  if (dateKeys.length === 0) {
+    return [];
+  }
+
   const rows = await db.getAllAsync<{
     dateKey: string;
     answerCount: number;
@@ -48,16 +60,15 @@ export async function getRecentSevenDayStats(): Promise<DailyPracticeStat[]> {
         COUNT(*) as answerCount,
         COALESCE(SUM(isCorrect), 0) as correctCount
       FROM user_answer
-      WHERE substr(answeredAt, 1, 10) >= ?
+      WHERE substr(answeredAt, 1, 10) BETWEEN ? AND ?
       GROUP BY substr(answeredAt, 1, 10)
       ORDER BY dateKey ASC
     `,
-    [startDateKey],
+    [dateKeys[0], dateKeys[dateKeys.length - 1]],
   );
 
   const rowMap = new Map(rows.map((row) => [row.dateKey, row]));
-  return Array.from({ length: 7 }, (_, index) => {
-    const dateKey = getDateKeyOffset(index - 6);
+  return dateKeys.map((dateKey) => {
     const row = rowMap.get(dateKey);
 
     return {
@@ -71,9 +82,7 @@ export async function getRecentSevenDayStats(): Promise<DailyPracticeStat[]> {
 
 export async function getSubjectProgressStats(): Promise<SubjectProgressStat[]> {
   const db = await getDatabase();
-  const rows = await db.getAllAsync<
-    Omit<SubjectProgressStat, 'completionRate' | 'accuracyRate'>
-  >(
+  const rows = await db.getAllAsync<Omit<SubjectProgressStat, 'completionRate' | 'accuracyRate'>>(
     `
       SELECT
         subject.id as subjectId,
@@ -104,9 +113,7 @@ export async function getSubjectProgressStats(): Promise<SubjectProgressStat[]> 
 
 export async function getTopicProgressStats(): Promise<TopicProgressStat[]> {
   const db = await getDatabase();
-  const rows = await db.getAllAsync<
-    Omit<TopicProgressStat, 'completionRate' | 'accuracyRate'>
-  >(
+  const rows = await db.getAllAsync<Omit<TopicProgressStat, 'completionRate' | 'accuracyRate'>>(
     `
       SELECT
         topic.id as topicId,
@@ -184,6 +191,39 @@ function getDateKeyOffset(offsetDays: number) {
   date.setUTCHours(0, 0, 0, 0);
   date.setUTCDate(date.getUTCDate() + offsetDays);
   return date.toISOString().slice(0, 10);
+}
+
+function getDateKeyRange(startDateKey: string, endDateKey: string) {
+  const start = parseDateKey(startDateKey);
+  const end = parseDateKey(endDateKey);
+
+  if (!start || !end || start.getTime() > end.getTime()) {
+    return [];
+  }
+
+  const dateKeys: string[] = [];
+  const cursor = new Date(start);
+
+  while (cursor.getTime() <= end.getTime()) {
+    dateKeys.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  return dateKeys;
+}
+
+function parseDateKey(dateKey: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+    return null;
+  }
+
+  const date = new Date(`${dateKey}T00:00:00Z`);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date;
 }
 
 function getEmptyOverview(): HomeOverview {
