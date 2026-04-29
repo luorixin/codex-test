@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.StudyRecordQueryMapper">
+
+  <resultMap id="WrongBookOverviewResult" type="com.quizapp.system.domain.vo.WrongBookOverviewVo">
+    <result property="unresolvedCount" column="unresolved_count"/>
+    <result property="resolvedCount" column="resolved_count"/>
+    <result property="totalWrongCount" column="total_wrong_count"/>
+  </resultMap>
+
+  <resultMap id="WrongBookSubjectSummaryResult" type="com.quizapp.system.domain.vo.WrongBookSubjectSummaryVo">
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="unresolvedCount" column="unresolved_count"/>
+  </resultMap>
+
+  <resultMap id="WrongBookTopicSummaryResult" type="com.quizapp.system.domain.vo.WrongBookTopicSummaryVo">
+    <result property="topicId" column="topic_id"/>
+    <result property="topicName" column="topic_name"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="unresolvedCount" column="unresolved_count"/>
+    <result property="totalWrongCount" column="total_wrong_count"/>
+    <result property="lastWrongAt" column="last_wrong_at"/>
+  </resultMap>
+
+  <resultMap id="WrongBookQuestionSummaryResult" type="com.quizapp.system.domain.vo.WrongBookQuestionSummaryVo">
+    <result property="questionId" column="question_id"/>
+    <result property="stem" column="stem"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="topicName" column="topic_name"/>
+    <result property="wrongCount" column="wrong_count"/>
+    <result property="resolved" column="resolved"/>
+    <result property="lastWrongAt" column="last_wrong_at"/>
+  </resultMap>
+
+  <resultMap id="WrongBookQuestionDetailResult" type="com.quizapp.system.domain.vo.WrongBookQuestionDetailVo">
+    <result property="questionId" column="question_id"/>
+    <result property="stem" column="stem"/>
+    <result property="explanation" column="explanation"/>
+    <result property="type" column="type"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="topicName" column="topic_name"/>
+    <result property="wrongCount" column="wrong_count"/>
+    <result property="firstWrongAt" column="first_wrong_at"/>
+    <result property="lastWrongAt" column="last_wrong_at"/>
+    <result property="resolved" column="resolved"/>
+  </resultMap>
+
+  <resultMap id="PracticeQuestionOptionResult" type="com.quizapp.system.domain.vo.PracticeQuestionOptionVo">
+    <id property="id" column="id"/>
+    <result property="questionId" column="question_id"/>
+    <result property="key" column="option_key"/>
+    <result property="content" column="content"/>
+  </resultMap>
+
+  <resultMap id="HomeOverviewResult" type="com.quizapp.system.domain.vo.HomeOverviewVo">
+    <result property="subjectCount" column="subject_count"/>
+    <result property="topicCount" column="topic_count"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="totalSessions" column="total_sessions"/>
+    <result property="completedSessions" column="completed_sessions"/>
+    <result property="totalAnswers" column="total_answers"/>
+    <result property="correctAnswers" column="correct_answers"/>
+    <result property="answeredUniqueQuestions" column="answered_unique_questions"/>
+    <result property="unresolvedWrongCount" column="unresolved_wrong_count"/>
+    <result property="activeDaysLast7" column="active_days_last7"/>
+  </resultMap>
+
+  <resultMap id="DailyPracticeStatResult" type="com.quizapp.system.domain.vo.DailyPracticeStatVo">
+    <result property="dateKey" column="date_key"/>
+    <result property="label" column="label"/>
+    <result property="answerCount" column="answer_count"/>
+    <result property="correctCount" column="correct_count"/>
+  </resultMap>
+
+  <resultMap id="SubjectProgressStatResult" type="com.quizapp.system.domain.vo.SubjectProgressStatVo">
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="totalQuestions" column="total_questions"/>
+    <result property="answeredQuestions" column="answered_questions"/>
+    <result property="answerCount" column="answer_count"/>
+    <result property="correctCount" column="correct_count"/>
+    <result property="unresolvedWrongCount" column="unresolved_wrong_count"/>
+  </resultMap>
+
+  <resultMap id="TopicProgressStatResult" type="com.quizapp.system.domain.vo.TopicProgressStatVo">
+    <result property="topicId" column="topic_id"/>
+    <result property="topicName" column="topic_name"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="totalQuestions" column="total_questions"/>
+    <result property="answeredQuestions" column="answered_questions"/>
+    <result property="answerCount" column="answer_count"/>
+    <result property="correctCount" column="correct_count"/>
+  </resultMap>
+
+  <resultMap id="PracticeSessionSummaryResult" type="com.quizapp.system.domain.vo.PracticeSessionSummaryVo">
+    <id property="id" column="id"/>
+    <result property="mode" column="mode"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="scopeTitle" column="scope_title"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="correctCount" column="correct_count"/>
+    <result property="startedAt" column="started_at"/>
+    <result property="finishedAt" column="finished_at"/>
+  </resultMap>
+
+  <resultMap id="TopicProgressSnapshotResult" type="com.quizapp.system.domain.vo.TopicProgressSnapshotVo">
+    <result property="childTopicCount" column="child_topic_count"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="answeredCount" column="answered_count"/>
+    <result property="wrongCount" column="wrong_count"/>
+  </resultMap>
+
+  <select id="selectWrongBookOverview" resultMap="WrongBookOverviewResult">
+    SELECT
+      SUM(CASE WHEN resolved = 0 THEN 1 ELSE 0 END) AS unresolved_count,
+      SUM(CASE WHEN resolved = 1 THEN 1 ELSE 0 END) AS resolved_count,
+      COALESCE(SUM(wrong_count), 0) AS total_wrong_count
+    FROM wrong_book_item
+    WHERE user_id = #{userId}
+    <if test="subjectId != null">
+      AND subject_id = #{subjectId}
+    </if>
+  </select>
+
+  <select id="selectWrongBookSubjects" resultMap="WrongBookSubjectSummaryResult">
+    SELECT
+      s.id AS subject_id,
+      s.name AS subject_name,
+      COUNT(*) AS unresolved_count
+    FROM wrong_book_item w
+    INNER JOIN subject s ON s.id = w.subject_id
+    WHERE w.user_id = #{userId}
+      AND w.resolved = 0
+    GROUP BY s.id, s.name, s.sort_order
+    ORDER BY s.sort_order ASC, s.name ASC
+  </select>
+
+  <select id="selectWrongBookTopics" resultMap="WrongBookTopicSummaryResult">
+    SELECT
+      t.id AS topic_id,
+      t.name AS topic_name,
+      s.id AS subject_id,
+      s.name AS subject_name,
+      SUM(CASE WHEN w.resolved = 0 THEN 1 ELSE 0 END) AS unresolved_count,
+      COALESCE(SUM(w.wrong_count), 0) AS total_wrong_count,
+      REPLACE(CAST(MAX(w.last_wrong_at) AS CHAR), ' ', 'T') AS last_wrong_at
+    FROM wrong_book_item w
+    INNER JOIN topic t ON t.id = w.topic_id
+    INNER JOIN subject s ON s.id = w.subject_id
+    WHERE w.user_id = #{userId}
+      AND w.subject_id = #{subjectId}
+    GROUP BY t.id, t.name, t.sort_order, s.id, s.name
+    HAVING total_wrong_count > 0
+    ORDER BY unresolved_count DESC, MAX(w.last_wrong_at) DESC, t.sort_order ASC, t.name ASC
+  </select>
+
+  <select id="selectWrongBookQuestions" resultMap="WrongBookQuestionSummaryResult">
+    SELECT
+      CAST(w.question_id AS CHAR) AS question_id,
+      q.stem,
+      CAST(s.id AS CHAR) AS subject_id,
+      s.name AS subject_name,
+      CAST(t.id AS CHAR) AS topic_id,
+      t.name AS topic_name,
+      w.wrong_count,
+      CASE WHEN w.resolved = 1 THEN TRUE ELSE FALSE END AS resolved,
+      REPLACE(CAST(w.last_wrong_at AS CHAR), ' ', 'T') AS last_wrong_at
+    FROM wrong_book_item w
+    INNER JOIN question q ON q.id = w.question_id
+    INNER JOIN topic t ON t.id = w.topic_id
+    INNER JOIN subject s ON s.id = w.subject_id
+    WHERE w.user_id = #{userId}
+      AND w.subject_id = #{subjectId}
+    <if test="topicId != null">
+      AND w.topic_id = #{topicId}
+    </if>
+    <if test="!includeResolved">
+      AND w.resolved = 0
+    </if>
+    ORDER BY w.resolved ASC, w.last_wrong_at DESC, w.question_id ASC
+  </select>
+
+  <select id="selectWrongBookQuestionDetail" resultMap="WrongBookQuestionDetailResult">
+    SELECT
+      CAST(w.question_id AS CHAR) AS question_id,
+      q.stem,
+      q.explanation,
+      q.type,
+      CAST(s.id AS CHAR) AS subject_id,
+      s.name AS subject_name,
+      CAST(t.id AS CHAR) AS topic_id,
+      t.name AS topic_name,
+      w.wrong_count,
+      REPLACE(CAST(w.first_wrong_at AS CHAR), ' ', 'T') AS first_wrong_at,
+      REPLACE(CAST(w.last_wrong_at AS CHAR), ' ', 'T') AS last_wrong_at,
+      CASE WHEN w.resolved = 1 THEN TRUE ELSE FALSE END AS resolved
+    FROM wrong_book_item w
+    INNER JOIN question q ON q.id = w.question_id
+    INNER JOIN subject s ON s.id = w.subject_id
+    INNER JOIN topic t ON t.id = w.topic_id
+    WHERE w.user_id = #{userId} AND w.question_id = #{questionId}
+  </select>
+
+  <select id="selectQuestionOptions" resultMap="PracticeQuestionOptionResult">
+    SELECT
+      CAST(id AS CHAR) AS id,
+      CAST(question_id AS CHAR) AS question_id,
+      option_key,
+      content
+    FROM question_option
+    WHERE question_id = #{questionId}
+    ORDER BY sort_order ASC, option_key ASC
+  </select>
+
+  <select id="selectHomeOverview" resultMap="HomeOverviewResult">
+    SELECT
+      (SELECT COUNT(*) FROM subject) AS subject_count,
+      (SELECT COUNT(*) FROM topic) AS topic_count,
+      (SELECT COUNT(*) FROM question) AS question_count,
+      (SELECT COUNT(*) FROM practice_session WHERE user_id = #{userId}) AS total_sessions,
+      (SELECT COUNT(*) FROM practice_session WHERE user_id = #{userId} AND finished_at IS NOT NULL) AS completed_sessions,
+      (SELECT COUNT(*) FROM user_answer WHERE user_id = #{userId}) AS total_answers,
+      (SELECT COALESCE(SUM(is_correct), 0) FROM user_answer WHERE user_id = #{userId}) AS correct_answers,
+      (SELECT COUNT(DISTINCT question_id) FROM user_answer WHERE user_id = #{userId}) AS answered_unique_questions,
+      (SELECT COUNT(*) FROM wrong_book_item WHERE user_id = #{userId} AND resolved = 0) AS unresolved_wrong_count,
+      (
+        SELECT COUNT(DISTINCT DATE(answered_at))
+        FROM user_answer
+        WHERE user_id = #{userId}
+          AND DATE(answered_at) >= #{activeSince}
+      ) AS active_days_last7
+  </select>
+
+  <select id="selectDailyPracticeStats" resultMap="DailyPracticeStatResult">
+    SELECT
+      CAST(CAST(answered_at AS DATE) AS CHAR) AS date_key,
+      CAST(CAST(answered_at AS DATE) AS CHAR) AS label,
+      COUNT(*) AS answer_count,
+      COALESCE(SUM(is_correct), 0) AS correct_count
+    FROM user_answer
+    WHERE user_id = #{userId}
+      AND CAST(CAST(answered_at AS DATE) AS CHAR) BETWEEN #{startDate} AND #{endDate}
+    GROUP BY CAST(CAST(answered_at AS DATE) AS CHAR)
+    ORDER BY date_key ASC
+  </select>
+
+  <select id="selectSubjectProgressStats" resultMap="SubjectProgressStatResult">
+    SELECT
+      CAST(s.id AS CHAR) AS subject_id,
+      s.name AS subject_name,
+      COUNT(DISTINCT q.id) AS total_questions,
+      COUNT(DISTINCT ua.question_id) AS answered_questions,
+      COUNT(ua.id) AS answer_count,
+      COALESCE(SUM(ua.is_correct), 0) AS correct_count,
+      (
+        SELECT COUNT(*)
+        FROM wrong_book_item w
+        WHERE w.user_id = #{userId}
+          AND w.subject_id = s.id
+          AND w.resolved = 0
+      ) AS unresolved_wrong_count
+    FROM subject s
+    LEFT JOIN question q ON q.subject_id = s.id
+    LEFT JOIN user_answer ua ON ua.user_id = #{userId} AND ua.question_id = q.id
+    GROUP BY s.id, s.name, s.sort_order
+    ORDER BY s.sort_order ASC, s.name ASC
+  </select>
+
+  <select id="selectTopicProgressStats" resultMap="TopicProgressStatResult">
+    SELECT
+      CAST(t.id AS CHAR) AS topic_id,
+      t.name AS topic_name,
+      CAST(s.id AS CHAR) AS subject_id,
+      s.name AS subject_name,
+      COUNT(DISTINCT q.id) AS total_questions,
+      COUNT(DISTINCT ua.question_id) AS answered_questions,
+      COUNT(ua.id) AS answer_count,
+      COALESCE(SUM(ua.is_correct), 0) AS correct_count
+    FROM topic t
+    INNER JOIN subject s ON s.id = t.subject_id
+    INNER JOIN question q ON q.topic_id = t.id
+    LEFT JOIN user_answer ua ON ua.user_id = #{userId} AND ua.question_id = q.id
+    GROUP BY t.id, t.name, t.sort_order, s.id, s.name
+    ORDER BY t.sort_order ASC, t.name ASC
+  </select>
+
+  <select id="selectRecentPracticeSessions" resultMap="PracticeSessionSummaryResult">
+    SELECT
+      ps.id,
+      ps.mode,
+      CAST(ps.topic_id AS CHAR) AS topic_id,
+      ps.scope_title,
+      s.name AS subject_name,
+      ps.question_count,
+      ps.correct_count,
+      REPLACE(CAST(ps.started_at AS CHAR), ' ', 'T') AS started_at,
+      REPLACE(CAST(ps.finished_at AS CHAR), ' ', 'T') AS finished_at
+    FROM practice_session ps
+    INNER JOIN subject s ON s.id = ps.subject_id
+    WHERE ps.user_id = #{userId}
+    ORDER BY COALESCE(ps.finished_at, ps.started_at) DESC, ps.id DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="selectTopicProgressSnapshot" resultMap="TopicProgressSnapshotResult">
+    WITH RECURSIVE subtree(id) AS (
+      SELECT id FROM topic WHERE id = #{topicId}
+      UNION ALL
+      SELECT topic.id
+      FROM topic
+      INNER JOIN subtree ON topic.parent_id = subtree.id
+    )
+    SELECT
+      (SELECT COUNT(*) FROM topic WHERE parent_id = #{topicId}) AS child_topic_count,
+      (SELECT COUNT(*) FROM question WHERE topic_id IN (SELECT id FROM subtree)) AS question_count,
+      (
+        SELECT COUNT(DISTINCT ua.question_id)
+        FROM user_answer ua
+        WHERE ua.user_id = #{userId}
+          AND ua.question_id IN (SELECT id FROM question WHERE topic_id IN (SELECT id FROM subtree))
+      ) AS answered_count,
+      (
+        SELECT COUNT(*)
+        FROM wrong_book_item w
+        WHERE w.user_id = #{userId}
+          AND w.topic_id IN (SELECT id FROM subtree)
+          AND w.resolved = 0
+      ) AS wrong_count
+  </select>
+</mapper>

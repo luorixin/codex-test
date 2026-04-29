@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.QuestionMapper">
+
+  <resultMap id="QuestionResult" type="com.quizapp.system.domain.Question">
+    <id property="id" column="id"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="type" column="type"/>
+    <result property="stem" column="stem"/>
+    <result property="explanation" column="explanation"/>
+    <result property="difficulty" column="difficulty"/>
+    <result property="source" column="source"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+  </resultMap>
+
+  <sql id="selectQuestion">
+    SELECT id, subject_id, topic_id, type, stem, explanation, difficulty, source, create_time, update_time
+    FROM question
+  </sql>
+
+  <select id="selectAll" resultMap="QuestionResult">
+    <include refid="selectQuestion"/>
+    ORDER BY id
+  </select>
+
+  <select id="selectById" parameterType="long" resultMap="QuestionResult">
+    <include refid="selectQuestion"/>
+    WHERE id = #{id}
+  </select>
+
+  <select id="selectBySubjectId" parameterType="long" resultMap="QuestionResult">
+    <include refid="selectQuestion"/>
+    WHERE subject_id = #{subjectId}
+    ORDER BY id
+  </select>
+
+  <select id="selectByTopicId" parameterType="long" resultMap="QuestionResult">
+    <include refid="selectQuestion"/>
+    WHERE topic_id = #{topicId}
+    ORDER BY id
+  </select>
+
+  <select id="selectBySubjectIdAndTopicIds" resultMap="QuestionResult">
+    <include refid="selectQuestion"/>
+    WHERE 1=1
+    <if test="subjectId != null">
+      AND subject_id = #{subjectId}
+    </if>
+    <if test="topicIds != null and topicIds.size() > 0">
+      AND topic_id IN
+      <foreach collection="topicIds" item="tid" open="(" separator="," close=")">
+        #{tid}
+      </foreach>
+    </if>
+    ORDER BY id
+  </select>
+</mapper>

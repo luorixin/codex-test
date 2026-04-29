@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.PracticeSessionQuestionMapper">
+
+  <resultMap id="PracticeSessionQuestionResult" type="com.quizapp.system.domain.PracticeSessionQuestion">
+    <id property="id" column="id"/>
+    <result property="sessionId" column="session_id"/>
+    <result property="questionId" column="question_id"/>
+    <result property="positionIndex" column="position_index"/>
+    <result property="createTime" column="create_time"/>
+  </resultMap>
+
+  <insert id="batchInsert">
+    INSERT INTO practice_session_question (session_id, question_id, position_index)
+    VALUES
+    <foreach collection="questionIds" item="questionId" index="index" separator=",">
+      (#{sessionId}, #{questionId}, #{index})
+    </foreach>
+  </insert>
+
+  <select id="countBySessionIdAndQuestionId" resultType="int">
+    SELECT COUNT(*)
+    FROM practice_session_question
+    WHERE session_id = #{sessionId} AND question_id = #{questionId}
+  </select>
+
+  <select id="selectBySessionId" resultMap="PracticeSessionQuestionResult">
+    SELECT id, session_id, question_id, position_index, create_time
+    FROM practice_session_question
+    WHERE session_id = #{sessionId}
+    ORDER BY position_index ASC
+  </select>
+</mapper>

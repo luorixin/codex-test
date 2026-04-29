@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: quiz-backend
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/quiz?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:luorixin}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:never}
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2s
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  type-aliases-package: com.quizapp.system.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
+app:
+  cors:
+    allowed-origin-patterns:
+      - "http://localhost:8081"
+      - "http://127.0.0.1:8081"
+      - "http://localhost:19006"
+      - "http://127.0.0.1:19006"
+  auth:
+    jwt-secret: ${JWT_SECRET:quiz-backend-secret-key-min-32-bytes!}
+    issuer: ${JWT_ISSUER:quiz-backend}
+    access-token-ttl: ${JWT_ACCESS_TTL:30}
+    refresh-token-ttl: ${JWT_REFRESH_TTL:720}

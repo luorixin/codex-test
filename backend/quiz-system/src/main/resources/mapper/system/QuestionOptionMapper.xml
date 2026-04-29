@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.QuestionOptionMapper">
+
+  <resultMap id="QuestionOptionResult" type="com.quizapp.system.domain.QuestionOption">
+    <id property="id" column="id"/>
+    <result property="questionId" column="question_id"/>
+    <result property="optionKey" column="option_key"/>
+    <result property="content" column="content"/>
+    <result property="isCorrect" column="is_correct"/>
+    <result property="sortOrder" column="sort_order"/>
+  </resultMap>
+
+  <sql id="selectQuestionOption">
+    SELECT id, question_id, option_key, content, is_correct, sort_order
+    FROM question_option
+  </sql>
+
+  <select id="selectAll" resultMap="QuestionOptionResult">
+    <include refid="selectQuestionOption"/>
+    ORDER BY question_id, sort_order
+  </select>
+
+  <select id="selectByQuestionId" parameterType="long" resultMap="QuestionOptionResult">
+    <include refid="selectQuestionOption"/>
+    WHERE question_id = #{questionId}
+    ORDER BY sort_order
+  </select>
+</mapper>

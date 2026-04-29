@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.UserAnswerMapper">
+
+  <resultMap id="UserAnswerResult" type="com.quizapp.system.domain.UserAnswer">
+    <id property="id" column="id"/>
+    <result property="sessionId" column="session_id"/>
+    <result property="userId" column="user_id"/>
+    <result property="questionId" column="question_id"/>
+    <result property="selectedOptionKeys" column="selected_option_keys"/>
+    <result property="isCorrect" column="is_correct"/>
+    <result property="answeredAt" column="answered_at"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="com.quizapp.system.domain.UserAnswer">
+    INSERT INTO user_answer
+      (id, session_id, user_id, question_id, selected_option_keys, is_correct, answered_at)
+    VALUES
+      (#{id}, #{sessionId}, #{userId}, #{questionId}, #{selectedOptionKeys}, #{isCorrect}, #{answeredAt})
+  </insert>
+
+  <select id="selectBySessionIdAndQuestionId" resultMap="UserAnswerResult">
+    SELECT
+      id, session_id, user_id, question_id, selected_option_keys,
+      is_correct, answered_at, create_time, update_time
+    FROM user_answer
+    WHERE session_id = #{sessionId}
+      AND question_id = #{questionId}
+      AND user_id = #{userId}
+  </select>
+
+  <select id="selectBySessionIdAndUserId" resultMap="UserAnswerResult">
+    SELECT
+      id, session_id, user_id, question_id, selected_option_keys,
+      is_correct, answered_at, create_time, update_time
+    FROM user_answer
+    WHERE session_id = #{sessionId}
+      AND user_id = #{userId}
+    ORDER BY answered_at ASC, id ASC
+  </select>
+
+  <select id="selectRecentByUserIdAndQuestionId" resultMap="UserAnswerResult">
+    SELECT
+      id, session_id, user_id, question_id, selected_option_keys,
+      is_correct, answered_at, create_time, update_time
+    FROM user_answer
+    WHERE user_id = #{userId}
+      AND question_id = #{questionId}
+    ORDER BY answered_at DESC, id DESC
+    LIMIT #{limit}
+  </select>
+</mapper>

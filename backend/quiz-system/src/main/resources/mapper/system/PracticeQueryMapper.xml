@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.PracticeQueryMapper">
+
+  <resultMap id="PracticeSessionDetailResult" type="com.quizapp.system.domain.vo.PracticeSessionDetailVo">
+    <id property="id" column="id"/>
+    <result property="mode" column="mode"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="scopeTitle" column="scope_title"/>
+    <result property="startedAt" column="started_at"/>
+    <result property="finishedAt" column="finished_at"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="correctCount" column="correct_count"/>
+  </resultMap>
+
+  <resultMap id="PracticeQuestionResult" type="com.quizapp.system.domain.vo.PracticeQuestionVo">
+    <id property="id" column="id"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="topicName" column="topic_name"/>
+    <result property="type" column="type"/>
+    <result property="stem" column="stem"/>
+    <result property="explanation" column="explanation"/>
+  </resultMap>
+
+  <resultMap id="PracticeOptionResult" type="com.quizapp.system.domain.vo.PracticeQuestionOptionVo">
+    <id property="id" column="id"/>
+    <result property="questionId" column="question_id"/>
+    <result property="key" column="option_key"/>
+    <result property="content" column="content"/>
+  </resultMap>
+
+  <resultMap id="PracticeSessionSummaryResult" type="com.quizapp.system.domain.vo.PracticeSessionSummaryVo">
+    <id property="id" column="id"/>
+    <result property="mode" column="mode"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="scopeTitle" column="scope_title"/>
+    <result property="subjectName" column="subject_name"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="correctCount" column="correct_count"/>
+    <result property="startedAt" column="started_at"/>
+    <result property="finishedAt" column="finished_at"/>
+  </resultMap>
+
+  <select id="selectSessionDetail" resultMap="PracticeSessionDetailResult">
+    SELECT
+      ps.id,
+      ps.mode,
+      ps.subject_id,
+      s.name AS subject_name,
+      ps.topic_id,
+      ps.scope_title,
+      REPLACE(CAST(ps.started_at AS CHAR), ' ', 'T') AS started_at,
+      REPLACE(CAST(ps.finished_at AS CHAR), ' ', 'T') AS finished_at,
+      ps.question_count,
+      ps.correct_count
+    FROM practice_session ps
+    INNER JOIN subject s ON s.id = ps.subject_id
+    WHERE ps.id = #{sessionId} AND ps.user_id = #{userId}
+  </select>
+
+  <select id="selectQuestionsBySessionId" resultMap="PracticeQuestionResult">
+    SELECT
+      q.id,
+      q.topic_id,
+      t.name AS topic_name,
+      q.type,
+      q.stem,
+      q.explanation
+    FROM practice_session ps
+    INNER JOIN practice_session_question psq ON psq.session_id = ps.id
+    INNER JOIN question q ON q.id = psq.question_id
+    INNER JOIN topic t ON t.id = q.topic_id
+    WHERE ps.id = #{sessionId} AND ps.user_id = #{userId}
+    ORDER BY psq.position_index ASC
+  </select>
+
+  <select id="selectOptionsBySessionId" resultMap="PracticeOptionResult">
+    SELECT
+      CAST(question_option.id AS CHAR) AS id,
+      CAST(question_option.question_id AS CHAR) AS question_id,
+      question_option.option_key,
+      question_option.content
+    FROM practice_session ps
+    INNER JOIN practice_session_question psq ON psq.session_id = ps.id
+    INNER JOIN question_option ON question_option.question_id = psq.question_id
+    WHERE ps.id = #{sessionId} AND ps.user_id = #{userId}
+    ORDER BY psq.position_index ASC, question_option.sort_order ASC, question_option.option_key ASC
+  </select>
+
+  <select id="selectLatestSessionSummary" resultMap="PracticeSessionSummaryResult">
+    SELECT
+      ps.id,
+      ps.mode,
+      ps.topic_id,
+      ps.scope_title,
+      s.name AS subject_name,
+      ps.question_count,
+      ps.correct_count,
+      REPLACE(CAST(ps.started_at AS CHAR), ' ', 'T') AS started_at,
+      REPLACE(CAST(ps.finished_at AS CHAR), ' ', 'T') AS finished_at
+    FROM practice_session ps
+    INNER JOIN subject s ON s.id = ps.subject_id
+    WHERE ps.user_id = #{userId}
+    ORDER BY COALESCE(ps.finished_at, ps.started_at) DESC, ps.id DESC
+    LIMIT 1
+  </select>
+</mapper>

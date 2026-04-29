@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quizapp.system.mapper.PracticeSessionMapper">
+
+  <resultMap id="PracticeSessionResult" type="com.quizapp.system.domain.PracticeSession">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="mode" column="mode"/>
+    <result property="subjectId" column="subject_id"/>
+    <result property="topicId" column="topic_id"/>
+    <result property="scopeTitle" column="scope_title"/>
+    <result property="questionCount" column="question_count"/>
+    <result property="correctCount" column="correct_count"/>
+    <result property="startedAt" column="started_at"/>
+    <result property="finishedAt" column="finished_at"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="com.quizapp.system.domain.PracticeSession">
+    INSERT INTO practice_session
+      (id, user_id, mode, subject_id, topic_id, scope_title, question_count, correct_count, started_at, finished_at)
+    VALUES
+      (#{id}, #{userId}, #{mode}, #{subjectId}, #{topicId}, #{scopeTitle}, #{questionCount}, #{correctCount}, #{startedAt}, #{finishedAt})
+  </insert>
+
+  <select id="selectByIdAndUserId" resultMap="PracticeSessionResult">
+    SELECT
+      id, user_id, mode, subject_id, topic_id, scope_title,
+      question_count, correct_count, started_at, finished_at, create_time, update_time
+    FROM practice_session
+    WHERE id = #{id} AND user_id = #{userId}
+  </select>
+
+  <update id="updateProgress">
+    UPDATE practice_session
+    SET correct_count = #{correctCount},
+        finished_at = #{finishedAt}
+    WHERE id = #{id} AND user_id = #{userId}
+  </update>
+</mapper>

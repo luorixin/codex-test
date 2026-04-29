@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+backend/*/target/
+backend/.m2/
 
 # Expo
 .expo/
@@ -32,6 +34,8 @@ yarn-error.*
 
 # local env files
 .env*.local
+frontend/.env
+backend/.env
 
 # typescript
 *.tsbuildinfo
