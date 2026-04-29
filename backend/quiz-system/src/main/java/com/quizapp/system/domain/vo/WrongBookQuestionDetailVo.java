@@ -1,5 +1,6 @@
 package com.quizapp.system.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,9 @@ public class WrongBookQuestionDetailVo {
   private String firstWrongAt;
   private String lastWrongAt;
   private boolean resolved;
+  @JsonIgnore
+  private String correctOptionKeysPayload;
+  private List<String> correctOptionKeys;
   private List<PracticeQuestionOptionVo> options;
   private List<PracticeAnswerRecordVo> recentAnswers;
 }

@@ -235,7 +235,7 @@ public class PracticeSessionServiceImpl implements IPracticeSessionService {
     answer.setAnsweredAt(answeredAt);
     userAnswerMapper.insert(answer);
 
-    syncWrongBookItem(sessionId, userId, question, answeredAt, isCorrect);
+    syncWrongBookItem(sessionId, userId, question, answeredAt, isCorrect, correctOptionKeys);
 
     List<UserAnswer> answers = userAnswerMapper.selectBySessionIdAndUserId(sessionId, userId);
     int correctCount = (int) answers.stream().filter(item -> item.getIsCorrect() != null && item.getIsCorrect() == 1).count();
@@ -351,9 +351,11 @@ public class PracticeSessionServiceImpl implements IPracticeSessionService {
       Long userId,
       Question question,
       LocalDateTime answeredAt,
-      boolean isCorrect
+      boolean isCorrect,
+      List<String> correctOptionKeys
   ) {
     WrongBookItem item = wrongBookItemMapper.selectByUserIdAndQuestionId(userId, question.getId());
+    String correctOptionKeysPayload = writeSelection(correctOptionKeys);
 
     if (!isCorrect) {
       if (item == null) {
@@ -362,6 +364,7 @@ public class PracticeSessionServiceImpl implements IPracticeSessionService {
         created.setQuestionId(question.getId());
         created.setSubjectId(question.getSubjectId());
         created.setTopicId(question.getTopicId());
+        created.setCorrectOptionKeys(correctOptionKeysPayload);
         created.setFirstWrongAt(answeredAt);
         created.setLastWrongAt(answeredAt);
         created.setWrongCount(1);
@@ -373,6 +376,7 @@ public class PracticeSessionServiceImpl implements IPracticeSessionService {
 
       item.setSubjectId(question.getSubjectId());
       item.setTopicId(question.getTopicId());
+      item.setCorrectOptionKeys(correctOptionKeysPayload);
       item.setLastWrongAt(answeredAt);
       item.setWrongCount((item.getWrongCount() == null ? 0 : item.getWrongCount()) + 1);
       item.setLastSessionId(sessionId);
@@ -384,6 +388,7 @@ public class PracticeSessionServiceImpl implements IPracticeSessionService {
     if (item != null) {
       item.setSubjectId(question.getSubjectId());
       item.setTopicId(question.getTopicId());
+      item.setCorrectOptionKeys(correctOptionKeysPayload);
       item.setLastSessionId(sessionId);
       item.setResolved(1);
       wrongBookItemMapper.update(item);

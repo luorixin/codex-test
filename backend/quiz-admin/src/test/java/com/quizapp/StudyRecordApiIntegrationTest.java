@@ -79,6 +79,12 @@ class StudyRecordApiIntegrationTest {
         .andExpect(jsonPath("$.data.unresolvedCount").value(1))
         .andExpect(jsonPath("$.data.totalWrongCount").value(1));
 
+    mockMvc.perform(get("/api/v1/wrong-book/questions/{questionId}", 1).with(user("admin")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.questionId").value("1"))
+        .andExpect(jsonPath("$.data.correctOptionKeys[0]").value("B"))
+        .andExpect(jsonPath("$.data.correctOptionKeysPayload").doesNotExist());
+
     mockMvc.perform(get("/api/v1/home/overview").with(user("admin")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.totalSessions").value(1))

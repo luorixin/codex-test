@@ -1,5 +1,5 @@
 import { Link, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -20,14 +20,23 @@ export default function WrongBookScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const hasScreenDataRef = useRef(false);
 
-  const load = useCallback(async (subjectId?: string | null) => {
-    setIsLoading(true);
+  const load = useCallback(async (subjectId?: string | null, forceLoading = false) => {
+    const shouldShowLoading = forceLoading || !hasScreenDataRef.current;
+
+    if (shouldShowLoading) {
+      setIsLoading(true);
+    }
     setErrorMessage(null);
     const nextScreenData = await getWrongBookScreenData(subjectId ?? undefined);
     setScreenData(nextScreenData);
+    hasScreenDataRef.current = true;
     setSelectedSubjectId(nextScreenData.selectedSubjectId);
-    setIsLoading(false);
+
+    if (shouldShowLoading) {
+      setIsLoading(false);
+    }
   }, []);
 
   useFocusEffect(
@@ -58,7 +67,7 @@ export default function WrongBookScreen() {
 
   function handleSelectSubject(subjectId: string) {
     setSelectedSubjectId(subjectId);
-    load(subjectId).catch((error) => {
+    load(subjectId, true).catch((error) => {
       setErrorMessage(
         error instanceof Error
           ? getLocalizedPracticeMessage(error.message, t)

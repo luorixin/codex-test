@@ -88,6 +88,7 @@ public class WrongBookServiceImpl implements IWrongBookService {
         .map(this::toAnswerRecordVo)
         .toList();
 
+    detail.setCorrectOptionKeys(readSelection(detail.getCorrectOptionKeysPayload()));
     detail.setOptions(options);
     detail.setRecentAnswers(recentAnswers);
     return detail;
@@ -105,6 +106,9 @@ public class WrongBookServiceImpl implements IWrongBookService {
   }
 
   private List<String> readSelection(String payload) {
+    if (payload == null || payload.isBlank()) {
+      return List.of();
+    }
     try {
       return objectMapper.readValue(payload, STRING_LIST_TYPE);
     } catch (JsonProcessingException e) {

@@ -50,6 +50,7 @@
     <result property="firstWrongAt" column="first_wrong_at"/>
     <result property="lastWrongAt" column="last_wrong_at"/>
     <result property="resolved" column="resolved"/>
+    <result property="correctOptionKeysPayload" column="correct_option_keys"/>
   </resultMap>
 
   <resultMap id="PracticeQuestionOptionResult" type="com.quizapp.system.domain.vo.PracticeQuestionOptionVo">
@@ -202,7 +203,8 @@
       w.wrong_count,
       REPLACE(CAST(w.first_wrong_at AS CHAR), ' ', 'T') AS first_wrong_at,
       REPLACE(CAST(w.last_wrong_at AS CHAR), ' ', 'T') AS last_wrong_at,
-      CASE WHEN w.resolved = 1 THEN TRUE ELSE FALSE END AS resolved
+      CASE WHEN w.resolved = 1 THEN TRUE ELSE FALSE END AS resolved,
+      w.correct_option_keys
     FROM wrong_book_item w
     INNER JOIN question q ON q.id = w.question_id
     INNER JOIN subject s ON s.id = w.subject_id

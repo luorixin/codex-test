@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS wrong_book_item (
   question_id    BIGINT NOT NULL,
   subject_id     BIGINT NOT NULL,
   topic_id       BIGINT NOT NULL,
+  correct_option_keys TEXT,
   first_wrong_at DATETIME NOT NULL,
   last_wrong_at  DATETIME NOT NULL,
   wrong_count    INT NOT NULL DEFAULT 1,

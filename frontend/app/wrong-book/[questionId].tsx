@@ -70,7 +70,11 @@ export default function WrongBookQuestionDetailScreen() {
     );
   }
 
-  const hasLocalCorrectAnswers = detail.options.some((option) => option.isCorrect === true);
+  const correctOptionKeys = detail.correctOptionKeys ?? [];
+  const correctOptions = detail.options.filter(
+    (option) => option.isCorrect === true || correctOptionKeys.includes(option.key),
+  );
+  const hasCorrectAnswers = correctOptions.length > 0;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -84,17 +88,22 @@ export default function WrongBookQuestionDetailScreen() {
       </SectionCard>
 
       <SectionCard title={t('wrongBook.correctAnswerTitle')}>
-        {hasLocalCorrectAnswers ? (
+        {hasCorrectAnswers ? (
           <View style={styles.optionList}>
-            {detail.options.map((option) => (
-              <View
-                key={option.id}
-                style={[styles.optionRow, option.isCorrect === true ? styles.correctOptionRow : null]}
-              >
-                <Text style={styles.optionKey}>{option.key}</Text>
-                <Text style={styles.optionContent}>{option.content}</Text>
-              </View>
-            ))}
+            {detail.options.map((option) => {
+              const isCorrect =
+                option.isCorrect === true || correctOptionKeys.includes(option.key);
+
+              return (
+                <View
+                  key={option.id}
+                  style={[styles.optionRow, isCorrect ? styles.correctOptionRow : null]}
+                >
+                  <Text style={styles.optionKey}>{option.key}</Text>
+                  <Text style={styles.optionContent}>{option.content}</Text>
+                </View>
+              );
+            })}
           </View>
         ) : (
           <>

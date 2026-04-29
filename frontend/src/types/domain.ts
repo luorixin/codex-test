@@ -218,6 +218,7 @@ export type WrongBookQuestionDetail = {
   firstWrongAt: string;
   lastWrongAt: string;
   resolved: boolean;
+  correctOptionKeys?: string[];
   options: PracticeQuestionOption[];
   recentAnswers: PracticeAnswerRecord[];
 };

@@ -1,22 +1,30 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export function useScreenData<T>(fetcher: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const hasDataRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
+      const shouldShowInitialLoading = !hasDataRef.current;
 
-      setIsLoading(true);
+      if (shouldShowInitialLoading) {
+        setIsLoading(true);
+      } else {
+        setIsRefreshing(true);
+      }
       setError(null);
 
       fetcher()
         .then((result) => {
           if (!cancelled) {
             setData(result);
+            hasDataRef.current = true;
           }
         })
         .catch((caught) => {
@@ -26,7 +34,11 @@ export function useScreenData<T>(fetcher: () => Promise<T>) {
         })
         .finally(() => {
           if (!cancelled) {
-            setIsLoading(false);
+            if (shouldShowInitialLoading) {
+              setIsLoading(false);
+            } else {
+              setIsRefreshing(false);
+            }
           }
         });
 
@@ -36,5 +48,5 @@ export function useScreenData<T>(fetcher: () => Promise<T>) {
     }, [fetcher]),
   );
 
-  return { data, isLoading, error, errorMessage: error?.message ?? null };
+  return { data, isLoading, isRefreshing, error, errorMessage: error?.message ?? null };
 }

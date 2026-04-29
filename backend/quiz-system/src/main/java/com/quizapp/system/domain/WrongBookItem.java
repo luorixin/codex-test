@@ -12,6 +12,7 @@ public class WrongBookItem {
   private Long questionId;
   private Long subjectId;
   private Long topicId;
+  private String correctOptionKeys;
   private LocalDateTime firstWrongAt;
   private LocalDateTime lastWrongAt;
   private Integer wrongCount;
